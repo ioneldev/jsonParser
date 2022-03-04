@@ -2,6 +2,7 @@ package service
 
 import (
 	"jsonParser/model"
+	"os"
 )
 
 type Grouping struct {
@@ -64,6 +65,14 @@ func (g *Grouping) ExportToJson() error {
 			return err
 		}
 
+		_, err = os.Stat("export")
+		if os.IsNotExist(err) {
+			err = os.Mkdir("export", 0755)
+
+			if err != nil {
+				return err
+			}
+		}
 		filename := "export/" + group.Index + ".json"
 		err = WriteJsonFile(encodedGroup, filename)
 		if err != nil {
